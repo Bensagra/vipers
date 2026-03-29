@@ -10,20 +10,47 @@ import { db } from "@/lib/db";
 
 const createOrderSchema = z.object({
   orderNumber: z.string().trim().min(1).max(50),
-  storeId: z.string().trim().min(1),
+  storeId: z.string().trim().min(1).optional(),
 });
 
 export async function GET(req: Request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id || session.user.role !== UserRole.ADMIN) {
+  if (
+    !session?.user?.id ||
+    (session.user.role !== UserRole.ADMIN && session.user.role !== UserRole.SUPERADMIN)
+  ) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const url = new URL(req.url);
-  const storeId = url.searchParams.get("storeId");
+  const requestedStoreId = url.searchParams.get("storeId");
+
+  let whereFilter: { storeId?: string | { in: string[] } } | undefined;
+
+  if (session.user.role === UserRole.SUPERADMIN) {
+    whereFilter = requestedStoreId ? { storeId: requestedStoreId } : undefined;
+  } else {
+    const managedStores = await db.store.findMany({
+      where: { managerUserId: session.user.id },
+      select: { id: true },
+    });
+    const managedStoreIds = managedStores.map((store) => store.id);
+
+    if (managedStoreIds.length === 0) {
+      return NextResponse.json({ orders: [] });
+    }
+
+    if (requestedStoreId && !managedStoreIds.includes(requestedStoreId)) {
+      return NextResponse.json({ error: "No tenes acceso a ese local" }, { status: 403 });
+    }
+
+    whereFilter = requestedStoreId
+      ? { storeId: requestedStoreId }
+      : { storeId: { in: managedStoreIds } };
+  }
 
   const orders = await db.order.findMany({
-    where: storeId ? { storeId } : undefined,
+    where: whereFilter,
     include: {
       store: true,
       user: {
@@ -43,7 +70,10 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id || session.user.role !== UserRole.ADMIN) {
+  if (
+    !session?.user?.id ||
+    (session.user.role !== UserRole.ADMIN && session.user.role !== UserRole.SUPERADMIN)
+  ) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -55,17 +85,47 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Datos invalidos" }, { status: 400 });
     }
 
-    const { orderNumber, storeId } = parsed.data;
+    const { orderNumber, storeId: storeIdFromBody } = parsed.data;
 
-    const store = await db.store.findUnique({ where: { id: storeId } });
+    let effectiveStoreId = storeIdFromBody;
+
+    if (session.user.role === UserRole.ADMIN) {
+      const managedStore = await db.store.findFirst({
+        where: { managerUserId: session.user.id },
+        select: { id: true },
+      });
+
+      if (!managedStore) {
+        return NextResponse.json(
+          { error: "Tu cuenta no tiene local asignado. Contacta al superadmin." },
+          { status: 403 },
+        );
+      }
+
+      if (effectiveStoreId && effectiveStoreId !== managedStore.id) {
+        return NextResponse.json({ error: "No tenes acceso a ese local" }, { status: 403 });
+      }
+
+      effectiveStoreId = managedStore.id;
+    }
+
+    if (!effectiveStoreId) {
+      return NextResponse.json({ error: "Falta storeId" }, { status: 400 });
+    }
+
+    const store = await db.store.findUnique({ where: { id: effectiveStoreId } });
     if (!store) {
       return NextResponse.json({ error: "Local no encontrado" }, { status: 404 });
+    }
+
+    if (session.user.role === UserRole.ADMIN && store.managerUserId !== session.user.id) {
+      return NextResponse.json({ error: "No tenes acceso a ese local" }, { status: 403 });
     }
 
     const order = await db.order.create({
       data: {
         orderNumber,
-        storeId,
+        storeId: effectiveStoreId,
         qrToken: randomUUID(),
         events: {
           create: {

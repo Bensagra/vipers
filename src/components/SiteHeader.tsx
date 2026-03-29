@@ -20,7 +20,13 @@ export function SiteHeader() {
             Mis pedidos
           </Link>
 
-          {session?.user.role === "ADMIN" && (
+          {session?.user.role === "SUPERADMIN" && (
+            <Link className="rounded-full px-3 py-1.5 hover:bg-black/5" href="/superadmin">
+              Superadmin
+            </Link>
+          )}
+
+          {(session?.user.role === "ADMIN" || session?.user.role === "SUPERADMIN") && (
             <Link className="rounded-full px-3 py-1.5 hover:bg-black/5" href="/admin">
               Admin
             </Link>
@@ -33,7 +39,9 @@ export function SiteHeader() {
               <span
                 className={clsx(
                   "hidden rounded-full px-3 py-1 text-xs font-medium md:inline-flex",
-                  session.user.role === "ADMIN"
+                  session.user.role === "SUPERADMIN"
+                    ? "bg-[var(--brand)] text-white"
+                    : session.user.role === "ADMIN"
                     ? "bg-[var(--ink)] text-white"
                     : "bg-[var(--mint-soft)] text-[var(--mint)]",
                 )}

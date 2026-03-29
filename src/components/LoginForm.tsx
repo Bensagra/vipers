@@ -19,7 +19,7 @@ export function LoginForm({ providers }: LoginFormProps) {
   const searchParams = useSearchParams();
 
   const callbackUrl = useMemo(
-    () => searchParams.get("callbackUrl") || "/my-orders",
+    () => searchParams.get("callbackUrl") || "/post-login",
     [searchParams],
   );
 

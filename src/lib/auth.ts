@@ -10,21 +10,26 @@ import GoogleProvider from "next-auth/providers/google";
 
 import { db } from "@/lib/db";
 
-function normalizedAdminEmails() {
+function normalizedSuperAdminEmails() {
+  const fromSuperAdminEnv = process.env.SUPERADMIN_EMAILS;
+  const fallback = process.env.ADMIN_EMAILS;
+
+  const source = fromSuperAdminEnv && fromSuperAdminEnv.trim() ? fromSuperAdminEnv : fallback;
+
   return new Set(
-    (process.env.ADMIN_EMAILS ?? "")
+    (source ?? "")
       .split(",")
       .map((item) => item.trim().toLowerCase())
       .filter(Boolean),
   );
 }
 
-export function isAdminEmail(email?: string | null) {
+export function isSuperAdminEmail(email?: string | null) {
   if (!email) {
     return false;
   }
 
-  return normalizedAdminEmails().has(email.toLowerCase());
+  return normalizedSuperAdminEmails().has(email.toLowerCase());
 }
 
 const providers: NextAuthOptions["providers"] = [
@@ -110,8 +115,8 @@ export const authOptions: NextAuthOptions = {
         token.role = (user.role as UserRole) ?? UserRole.CUSTOMER;
       }
 
-      if (token.email && isAdminEmail(token.email)) {
-        token.role = UserRole.ADMIN;
+      if (token.email && isSuperAdminEmail(token.email)) {
+        token.role = UserRole.SUPERADMIN;
       }
 
       return token;
@@ -129,18 +134,18 @@ export const authOptions: NextAuthOptions = {
         return true;
       }
 
-      if (!isAdminEmail(user.email)) {
+      if (!isSuperAdminEmail(user.email)) {
         return true;
       }
 
       await db.user
         .update({
           where: { email: user.email.toLowerCase() },
-          data: { role: UserRole.ADMIN },
+          data: { role: UserRole.SUPERADMIN },
         })
         .catch(() => null);
 
-      user.role = UserRole.ADMIN;
+      user.role = UserRole.SUPERADMIN;
 
       return true;
     },

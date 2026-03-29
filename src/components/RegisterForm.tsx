@@ -43,7 +43,7 @@ export function RegisterForm() {
       email,
       password,
       redirect: false,
-      callbackUrl: "/my-orders",
+      callbackUrl: "/post-login",
     });
 
     setLoading(false);
@@ -53,7 +53,7 @@ export function RegisterForm() {
       return;
     }
 
-    router.push("/my-orders");
+    router.push(loginResult?.url || "/post-login");
     router.refresh();
   }
 

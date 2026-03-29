@@ -3,7 +3,7 @@ import { hash } from "bcryptjs";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { isAdminEmail } from "@/lib/auth";
+import { isSuperAdminEmail } from "@/lib/auth";
 import { db } from "@/lib/db";
 
 const registerSchema = z.object({
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
         name,
         email,
         passwordHash,
-        role: isAdminEmail(email) ? UserRole.ADMIN : UserRole.CUSTOMER,
+        role: isSuperAdminEmail(email) ? UserRole.SUPERADMIN : UserRole.CUSTOMER,
       },
       select: {
         id: true,

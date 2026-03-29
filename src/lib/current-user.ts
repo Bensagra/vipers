@@ -24,5 +24,10 @@ export async function getCurrentUserFromSession() {
 
 export async function isCurrentUserAdmin() {
   const user = await getCurrentUserFromSession();
-  return user?.role === UserRole.ADMIN;
+  return user?.role === UserRole.ADMIN || user?.role === UserRole.SUPERADMIN;
+}
+
+export async function isCurrentUserSuperAdmin() {
+  const user = await getCurrentUserFromSession();
+  return user?.role === UserRole.SUPERADMIN;
 }

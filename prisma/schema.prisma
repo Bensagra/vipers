@@ -8,6 +8,7 @@ datasource db {
 }
 
 enum UserRole {
+  SUPERADMIN
   ADMIN
   CUSTOMER
 }
@@ -42,6 +43,8 @@ model User {
   accounts          Account[]
   sessions          Session[]
   orders            Order[]
+  managedStores     Store[]            @relation("StoreManager")
+  createdStores     Store[]            @relation("StoreCreator")
   pushSubscriptions PushSubscription[]
   notifications     Notification[]
   createdAt         DateTime           @default(now())
@@ -49,12 +52,19 @@ model User {
 }
 
 model Store {
-  id        String   @id @default(cuid())
-  name      String
-  slug      String   @unique
-  orders    Order[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String    @id @default(cuid())
+  name          String
+  slug          String    @unique
+  managerUserId String?
+  managerUser   User?     @relation("StoreManager", fields: [managerUserId], references: [id], onDelete: SetNull)
+  createdById   String?
+  createdBy     User?     @relation("StoreCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  orders        Order[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([managerUserId])
+  @@index([createdById])
 }
 
 model Order {

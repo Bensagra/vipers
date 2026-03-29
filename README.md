@@ -2,10 +2,11 @@
 
 App web para restaurantes estilo pager:
 
-- El admin crea pedido con numero y local.
+- El SUPERADMIN crea locales y les asigna una cuenta administradora.
+- La cuenta del local (ADMIN) crea pedido con numero y local.
 - Se genera QR unico para ese pedido.
 - El cliente escanea el QR, se loguea y el pedido queda asociado automaticamente.
-- Cuando el admin marca READY, el cliente recibe aviso en la web y push (si esta habilitado).
+- Cuando ADMIN/SUPERADMIN marca READY, el cliente recibe aviso en la web y push (si esta habilitado).
 
 ## Stack
 
@@ -36,15 +37,17 @@ pnpm dev
 
 ## Rutas principales
 
-- / admin panel del local (solo rol ADMIN)
+- /superadmin alta de local + cuenta del local (solo SUPERADMIN)
+- /admin panel operativo de pedidos (ADMIN del local o SUPERADMIN)
 - /claim/[token] claim de pedido por QR
 - /my-orders panel del cliente con estado y notificaciones
 - /login y /register autenticacion
 
-## Rol ADMIN
+## Roles
 
-- Define ADMIN_EMAILS en .env con emails separados por coma.
-- Si ese email se registra o entra por OAuth, se promueve a ADMIN automaticamente.
+- SUPERADMIN: define SUPERADMIN_EMAILS en .env (emails separados por coma).
+- SUPERADMIN es el unico que puede crear locales y asociar una cuenta a cada local.
+- ADMIN: cuenta asociada al local, puede crear pedidos y marcar READY en su local.
 
 ## Notificaciones y garantia real
 

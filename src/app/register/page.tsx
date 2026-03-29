@@ -8,7 +8,15 @@ export default async function RegisterPage() {
   const session = await getServerSession(authOptions);
 
   if (session?.user) {
-    redirect(session.user.role === "ADMIN" ? "/admin" : "/my-orders");
+    if (session.user.role === "SUPERADMIN") {
+      redirect("/superadmin");
+    }
+
+    if (session.user.role === "ADMIN") {
+      redirect("/admin");
+    }
+
+    redirect("/my-orders");
   }
 
   return <RegisterForm />;

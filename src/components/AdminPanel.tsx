@@ -35,7 +35,6 @@ function statusClass(status: string) {
 export function AdminPanel() {
   const [stores, setStores] = useState<Store[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
-  const [storeName, setStoreName] = useState("");
   const [orderNumber, setOrderNumber] = useState("");
   const [selectedStoreId, setSelectedStoreId] = useState("");
   const [claimUrl, setClaimUrl] = useState("");
@@ -50,13 +49,19 @@ export function AdminPanel() {
   const fetchStores = useCallback(async () => {
     const response = await fetch("/api/stores", { cache: "no-store" });
     if (!response.ok) {
+      setMessage("No se pudieron cargar tus locales.");
       return;
     }
 
     const data = (await response.json()) as { stores: Store[] };
     setStores(data.stores);
 
-    if (!selectedStoreId && data.stores.length > 0) {
+    if (data.stores.length === 0) {
+      setSelectedStoreId("");
+      return;
+    }
+
+    if (!selectedStoreId || !data.stores.some((store) => store.id === selectedStoreId)) {
       setSelectedStoreId(data.stores[0].id);
     }
   }, [selectedStoreId]);
@@ -78,6 +83,12 @@ export function AdminPanel() {
 
   useEffect(() => {
     void fetchStores();
+
+    const timer = setInterval(() => {
+      void fetchStores();
+    }, 20000);
+
+    return () => clearInterval(timer);
   }, [fetchStores]);
 
   useEffect(() => {
@@ -93,34 +104,6 @@ export function AdminPanel() {
 
     return () => clearInterval(timer);
   }, [selectedStoreId, fetchOrders]);
-
-  async function handleCreateStore(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!storeName.trim()) {
-      return;
-    }
-
-    setLoading(true);
-    setMessage("");
-
-    const response = await fetch("/api/stores", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: storeName }),
-    });
-
-    const data = (await response.json()) as { error?: string };
-    setLoading(false);
-
-    if (!response.ok) {
-      setMessage(data.error || "No se pudo crear el local");
-      return;
-    }
-
-    setStoreName("");
-    setMessage("Local creado");
-    await fetchStores();
-  }
 
   async function handleCreateOrder(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -175,25 +158,13 @@ export function AdminPanel() {
         </p>
         <h1 className="mt-3 font-title text-3xl tracking-tight md:text-4xl">Crear pedido y QR</h1>
         <p className="mt-2 text-sm text-black/70">
-          Flujo: crear local, generar pedido, mostrar QR y marcar READY cuando este para retirar.
+          El superadmin define y asigna locales. Vos operas pedidos de tus locales asignados.
         </p>
       </header>
 
       <div className="grid gap-5 md:grid-cols-2">
         <article className="card-panel space-y-3 p-5">
-          <h2 className="font-title text-xl">1) Crear local</h2>
-
-          <form className="space-y-3" onSubmit={handleCreateStore}>
-            <input
-              className="input-field"
-              placeholder="Ej: Sucursal Palermo"
-              value={storeName}
-              onChange={(event) => setStoreName(event.target.value)}
-            />
-            <button disabled={loading} className="btn-secondary w-full" type="submit">
-              Agregar local
-            </button>
-          </form>
+          <h2 className="font-title text-xl">1) Elegir local</h2>
 
           {stores.length > 0 ? (
             <select
@@ -208,7 +179,9 @@ export function AdminPanel() {
               ))}
             </select>
           ) : (
-            <p className="text-sm text-black/60">Todavia no hay locales.</p>
+            <p className="text-sm text-black/60">
+              Tu cuenta aun no tiene local asignado. Pedile al superadmin que te asigne uno.
+            </p>
           )}
         </article>
 

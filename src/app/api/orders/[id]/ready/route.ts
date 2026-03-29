@@ -11,7 +11,10 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id || session.user.role !== UserRole.ADMIN) {
+  if (
+    !session?.user?.id ||
+    (session.user.role !== UserRole.ADMIN && session.user.role !== UserRole.SUPERADMIN)
+  ) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -20,13 +23,23 @@ export async function POST(
   const existing = await db.order.findUnique({
     where: { id },
     include: {
-      store: true,
+      store: {
+        select: {
+          id: true,
+          name: true,
+          managerUserId: true,
+        },
+      },
       user: true,
     },
   });
 
   if (!existing) {
     return NextResponse.json({ error: "Pedido no encontrado" }, { status: 404 });
+  }
+
+  if (session.user.role === UserRole.ADMIN && existing.store.managerUserId !== session.user.id) {
+    return NextResponse.json({ error: "No tenes acceso a ese local" }, { status: 403 });
   }
 
   const order = await db.order.update({

@@ -1,19 +1,19 @@
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 
-import { AdminPanel } from "@/components/AdminPanel";
+import { SuperAdminPanel } from "@/components/SuperAdminPanel";
 import { authOptions } from "@/lib/auth";
 
-export default async function AdminPage() {
+export default async function SuperAdminPage() {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
-    redirect("/login?callbackUrl=/admin");
+    redirect("/login?callbackUrl=/superadmin");
   }
 
-  if (session.user.role !== "ADMIN" && session.user.role !== "SUPERADMIN") {
+  if (session.user.role !== "SUPERADMIN") {
     redirect("/my-orders");
   }
 
-  return <AdminPanel />;
+  return <SuperAdminPanel />;
 }
