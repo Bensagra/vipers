@@ -46,6 +46,13 @@ export function AdminPanel() {
     [stores, selectedStoreId],
   );
 
+  const readyCount = useMemo(
+    () => orders.filter((order) => order.status === "READY").length,
+    [orders],
+  );
+
+  const activeCount = useMemo(() => Math.max(orders.length - readyCount, 0), [orders, readyCount]);
+
   const fetchStores = useCallback(async () => {
     const response = await fetch("/api/stores", { cache: "no-store" });
     if (!response.ok) {
@@ -131,7 +138,7 @@ export function AdminPanel() {
 
     setClaimUrl(data.claimUrl);
     setOrderNumber("");
-    setMessage("Pedido creado y QR generado");
+    setMessage("Pedido creado");
     await fetchOrders(selectedStoreId);
   }
 
@@ -144,7 +151,7 @@ export function AdminPanel() {
       return;
     }
 
-    setMessage("Pedido marcado como READY");
+    setMessage("Pedido en READY");
     if (selectedStoreId) {
       await fetchOrders(selectedStoreId);
     }
@@ -152,112 +159,119 @@ export function AdminPanel() {
 
   return (
     <section className="grid gap-5">
-      <header className="card-panel p-6">
-        <p className="inline-flex rounded-full bg-[var(--brand-soft)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--brand)]">
-          Panel de local
-        </p>
-        <h1 className="mt-3 font-title text-3xl tracking-tight md:text-4xl">Crear pedido y QR</h1>
-        <p className="mt-2 text-sm text-black/70">
-          El superadmin define y asigna locales. Vos operas pedidos de tus locales asignados.
-        </p>
+      <header className="card-panel reveal p-6">
+        <div className="relative z-10 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <span className="chip-brand">Store desk</span>
+            <h1 className="mt-3 font-title text-3xl tracking-tight md:text-4xl">Panel Admin</h1>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            <div className="metric-card min-w-[112px]">
+              <p className="metric-value">{activeCount}</p>
+              <p className="metric-label">activos</p>
+            </div>
+            <div className="metric-card min-w-[112px]">
+              <p className="metric-value">{readyCount}</p>
+              <p className="metric-label">ready</p>
+            </div>
+          </div>
+        </div>
       </header>
 
-      <div className="grid gap-5 md:grid-cols-2">
-        <article className="card-panel space-y-3 p-5">
-          <h2 className="font-title text-xl">1) Elegir local</h2>
+      <div className="grid gap-5 xl:grid-cols-[340px_1fr]">
+        <aside className="card-panel p-5">
+          <div className="relative z-10 space-y-4">
+            <p className="font-title text-xl">Local</p>
 
-          {stores.length > 0 ? (
-            <select
-              className="input-field"
-              value={selectedStoreId}
-              onChange={(event) => setSelectedStoreId(event.target.value)}
-            >
-              {stores.map((store) => (
-                <option key={store.id} value={store.id}>
-                  {store.name} ({store.slug})
-                </option>
-              ))}
-            </select>
-          ) : (
-            <p className="text-sm text-black/60">
-              Tu cuenta aun no tiene local asignado. Pedile al superadmin que te asigne uno.
-            </p>
-          )}
-        </article>
+            {stores.length > 0 ? (
+              <select
+                className="input-field"
+                value={selectedStoreId}
+                onChange={(event) => setSelectedStoreId(event.target.value)}
+              >
+                {stores.map((store) => (
+                  <option key={store.id} value={store.id}>
+                    {store.name} ({store.slug})
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <p className="text-sm subtle-text">Sin locales asignados.</p>
+            )}
 
-        <article className="card-panel space-y-3 p-5">
-          <h2 className="font-title text-xl">2) Crear pedido + QR</h2>
+            <form className="space-y-3" onSubmit={handleCreateOrder}>
+              <input
+                className="input-field"
+                placeholder="Numero"
+                value={orderNumber}
+                onChange={(event) => setOrderNumber(event.target.value)}
+              />
+              <button className="btn-primary w-full" disabled={loading || !selectedStore} type="submit">
+                {loading ? "Creando..." : "Crear pedido"}
+              </button>
+            </form>
 
-          <form className="space-y-3" onSubmit={handleCreateOrder}>
-            <input
-              className="input-field"
-              placeholder="Numero de pedido"
-              value={orderNumber}
-              onChange={(event) => setOrderNumber(event.target.value)}
-            />
-            <button className="btn-primary w-full" disabled={loading || !selectedStore} type="submit">
-              Crear pedido
-            </button>
-          </form>
-
-          {claimUrl ? (
-            <div className="rounded-2xl border border-black/10 bg-white p-4">
-              <p className="mb-2 text-sm font-medium">QR del pedido</p>
-              <div className="inline-block rounded-xl bg-white p-3">
-                <QRCode value={claimUrl} size={190} />
+            {claimUrl ? (
+              <div className="rounded-2xl border border-[var(--line)] bg-white/80 p-4">
+                <div className="inline-block rounded-xl bg-white p-3">
+                  <QRCode value={claimUrl} size={182} />
+                </div>
+                <p className="mt-3 break-all text-xs subtle-text">{claimUrl}</p>
               </div>
-              <p className="mt-3 break-all text-xs text-black/60">{claimUrl}</p>
+            ) : null}
+
+            {message ? <p className="text-sm subtle-text">{message}</p> : null}
+          </div>
+        </aside>
+
+        <article className="card-panel p-5">
+          <div className="relative z-10">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+              <h2 className="font-title text-2xl">Pedidos</h2>
+              <button
+                className="btn-secondary"
+                type="button"
+                onClick={() => selectedStoreId && void fetchOrders(selectedStoreId)}
+              >
+                Refrescar
+              </button>
             </div>
-          ) : null}
+
+            <div className="grid gap-3">
+              {orders.length === 0 ? (
+                <p className="text-sm subtle-text">Sin pedidos en este local.</p>
+              ) : (
+                orders.map((order) => (
+                  <div
+                    key={order.id}
+                    className="flex flex-col gap-3 rounded-2xl border border-[var(--line)] bg-white/80 p-4 md:flex-row md:items-center md:justify-between"
+                  >
+                    <div>
+                      <p className="font-title text-2xl leading-none">#{order.orderNumber}</p>
+                      <p className="mt-1 text-sm subtle-text">
+                        {order.user?.email ? order.user.email : "Sin reclamo"}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <span className={`status-pill ${statusClass(order.status)}`}>{order.status}</span>
+                      <button
+                        type="button"
+                        className="btn-primary"
+                        disabled={order.status === "READY"}
+                        onClick={() => void markAsReady(order.id)}
+                      >
+                        READY
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
         </article>
       </div>
-
-      {message ? <p className="text-sm font-medium text-[var(--ink)]">{message}</p> : null}
-
-      <article className="card-panel p-5">
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-title text-xl">Pedidos recientes</h2>
-          <button
-            className="btn-secondary"
-            type="button"
-            onClick={() => selectedStoreId && void fetchOrders(selectedStoreId)}
-          >
-            Refrescar
-          </button>
-        </div>
-
-        <div className="grid gap-3">
-          {orders.length === 0 ? (
-            <p className="text-sm text-black/60">Aun no hay pedidos para este local.</p>
-          ) : (
-            orders.map((order) => (
-              <div
-                key={order.id}
-                className="flex flex-col gap-3 rounded-2xl border border-black/8 bg-white/80 p-4 md:flex-row md:items-center md:justify-between"
-              >
-                <div>
-                  <p className="font-semibold tracking-tight">Pedido {order.orderNumber}</p>
-                  <p className="text-sm text-black/65">
-                    {order.user?.email ? `Reclamado por ${order.user.email}` : "Aun sin reclamar"}
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <span className={`status-pill ${statusClass(order.status)}`}>{order.status}</span>
-                  <button
-                    type="button"
-                    className="btn-primary"
-                    disabled={order.status === "READY"}
-                    onClick={() => void markAsReady(order.id)}
-                  >
-                    Marcar READY
-                  </button>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </article>
     </section>
   );
 }

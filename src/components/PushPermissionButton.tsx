@@ -130,17 +130,19 @@ export function PushPermissionButton() {
   }
 
   return (
-    <div className="space-y-2 rounded-2xl border border-black/10 bg-white p-4">
-      <h3 className="font-title text-lg">Notificaciones del navegador</h3>
-      <p className="text-sm text-black/65">
-        Activalas para recibir aviso incluso cuando no tengas la web abierta.
-      </p>
+    <div className="card-panel p-4">
+      <div className="relative z-10 space-y-3">
+        <div className="flex items-center justify-between gap-2">
+          <h3 className="font-title text-lg">Push web</h3>
+          <span className="chip-mint">opcional</span>
+        </div>
 
-      <button className="btn-primary" type="button" onClick={enablePush} disabled={loading}>
-        {loading ? "Activando..." : "Activar push"}
-      </button>
+        <button className="btn-primary" type="button" onClick={enablePush} disabled={loading}>
+          {loading ? "Activando..." : "Activar"}
+        </button>
 
-      {statusText ? <p className="text-sm text-black/70">{statusText}</p> : null}
+        {statusText ? <p className="text-sm subtle-text">{statusText}</p> : null}
+      </div>
     </div>
   );
 }

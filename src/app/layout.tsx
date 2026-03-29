@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
-import { Sora, Space_Grotesk } from "next/font/google";
+import { Plus_Jakarta_Sans, Syne } from "next/font/google";
 
 import { SiteHeader } from "@/components/SiteHeader";
 import { AuthSessionProvider } from "@/components/providers/SessionProvider";
 
 import "./globals.css";
 
-const sora = Sora({
-  variable: "--font-sora",
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
 });
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+const syne = Syne({
+  variable: "--font-syne",
   subsets: ["latin"],
 });
 
@@ -27,15 +27,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="es"
-      className={`${sora.variable} ${spaceGrotesk.variable} h-full antialiased`}
-    >
-      <body className="min-h-full bg-[var(--bg)] text-[var(--ink)]">
+    <html lang="es" className={`${jakarta.variable} ${syne.variable} h-full antialiased`}>
+      <body className="min-h-full text-[var(--ink)]">
         <AuthSessionProvider>
-          <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_8%_14%,rgba(255,107,53,0.18),transparent_32%),radial-gradient(circle_at_89%_6%,rgba(31,157,133,0.18),transparent_24%),linear-gradient(160deg,#fff9ef_0%,#fff3dd_45%,#fefaf5_100%)]" />
+          <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_18%_14%,rgba(14,165,233,0.23),transparent_34%),radial-gradient(circle_at_84%_8%,rgba(255,107,53,0.2),transparent_26%),linear-gradient(150deg,#f4f8ff_0%,#eef4ff_42%,#fdf7f3_100%)]" />
+          <div className="pointer-events-none fixed inset-0 -z-10 opacity-55 [background-image:linear-gradient(to_right,rgba(13,21,40,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(13,21,40,0.035)_1px,transparent_1px)] [background-size:42px_42px]" />
           <SiteHeader />
-          <main className="mx-auto w-full max-w-6xl px-4 pb-16 pt-8 md:px-8">{children}</main>
+          <main className="mx-auto w-full max-w-7xl px-4 pb-16 pt-10 md:px-8">{children}</main>
         </AuthSessionProvider>
       </body>
     </html>

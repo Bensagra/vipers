@@ -70,6 +70,11 @@ export function MyOrdersClient() {
     [notifications],
   );
 
+  const readyCount = useMemo(
+    () => orders.filter((order) => order.status === "READY").length,
+    [orders],
+  );
+
   async function loadData() {
     const [ordersResponse, notificationsResponse] = await Promise.all([
       fetch("/api/me/orders", { cache: "no-store" }),
@@ -77,7 +82,7 @@ export function MyOrdersClient() {
     ]);
 
     if (!ordersResponse.ok || !notificationsResponse.ok) {
-      setMessage("No se pudo actualizar la informacion.");
+      setMessage("No se pudo actualizar.");
       setLoading(false);
       return;
     }
@@ -110,7 +115,6 @@ export function MyOrdersClient() {
       "Notification" in window &&
       Notification.permission === "granted"
     ) {
-      // Browser notification while page is open, acts as web fallback if push fails.
       new Notification(newest.title, { body: newest.body });
     }
 
@@ -130,7 +134,7 @@ export function MyOrdersClient() {
   async function markAllAsRead() {
     const response = await fetch("/api/me/notifications", { method: "POST" });
     if (!response.ok) {
-      setMessage("No se pudieron marcar como leidas.");
+      setMessage("No se pudieron marcar.");
       return;
     }
 
@@ -139,91 +143,107 @@ export function MyOrdersClient() {
 
   return (
     <section className="grid gap-5">
-      <header className="card-panel p-6">
-        <p className="inline-flex rounded-full bg-[var(--mint-soft)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--mint)]">
-          Cliente
-        </p>
-        <h1 className="mt-3 font-title text-3xl tracking-tight md:text-4xl">Mis pedidos</h1>
-        <p className="mt-2 text-sm text-black/70">
-          Esta pantalla se actualiza automaticamente y conserva historial de notificaciones.
-        </p>
-      </header>
+      <header className="card-panel reveal p-6">
+        <div className="relative z-10 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <span className="chip-mint">Client</span>
+            <h1 className="mt-3 font-title text-3xl tracking-tight md:text-4xl">Mis pedidos</h1>
+          </div>
 
-      <PushPermissionButton />
-
-      <article className="card-panel p-5">
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <h2 className="font-title text-xl">Notificaciones</h2>
-          <div className="flex items-center gap-2">
-            <span className="status-pill bg-black/10 text-black/70">Sin leer: {unreadCount}</span>
-            <button className="btn-secondary" type="button" onClick={markAllAsRead}>
-              Marcar leidas
-            </button>
+          <div className="grid grid-cols-3 gap-2">
+            <div className="metric-card min-w-[100px]">
+              <p className="metric-value">{orders.length}</p>
+              <p className="metric-label">pedidos</p>
+            </div>
+            <div className="metric-card min-w-[100px]">
+              <p className="metric-value">{readyCount}</p>
+              <p className="metric-label">ready</p>
+            </div>
+            <div className="metric-card min-w-[100px]">
+              <p className="metric-value">{unreadCount}</p>
+              <p className="metric-label">sin leer</p>
+            </div>
           </div>
         </div>
+      </header>
 
-        <div className="grid gap-3">
-          {notifications.length === 0 ? (
-            <p className="text-sm text-black/60">Todavia no hay notificaciones.</p>
-          ) : (
-            notifications.map((notification) => (
-              <div
-                key={notification.id}
-                className="rounded-2xl border border-black/10 bg-white/85 p-4"
-              >
-                <div className="mb-1 flex flex-wrap items-center gap-2">
-                  <span className="status-pill bg-black/10 text-black/70">{notification.channel}</span>
-                  <span
-                    className={`status-pill ${notificationStatusClass(notification.deliveryStatus)}`}
+      <div className="grid gap-5 xl:grid-cols-2">
+        <article className="card-panel p-5">
+          <div className="relative z-10">
+            <div className="mb-4 flex items-center justify-between gap-2">
+              <h2 className="font-title text-2xl">Notificaciones</h2>
+              <button className="btn-secondary" type="button" onClick={markAllAsRead}>
+                Marcar todo
+              </button>
+            </div>
+
+            <div className="grid gap-3">
+              {notifications.length === 0 ? (
+                <p className="text-sm subtle-text">Sin notificaciones.</p>
+              ) : (
+                notifications.map((notification) => (
+                  <div
+                    key={notification.id}
+                    className="rounded-2xl border border-[var(--line)] bg-white/80 p-4"
                   >
-                    {notification.deliveryStatus}
-                  </span>
-                  {!notification.readAt ? (
-                    <span className="status-pill bg-[var(--brand-soft)] text-[var(--brand)]">NUEVA</span>
-                  ) : null}
-                </div>
+                    <div className="mb-2 flex flex-wrap items-center gap-2">
+                      <span className="status-pill bg-black/10 text-black/70">{notification.channel}</span>
+                      <span className={`status-pill ${notificationStatusClass(notification.deliveryStatus)}`}>
+                        {notification.deliveryStatus}
+                      </span>
+                      {!notification.readAt ? (
+                        <span className="status-pill bg-[var(--sun-soft)] text-[var(--sun)]">NEW</span>
+                      ) : null}
+                    </div>
 
-                <p className="font-semibold tracking-tight">{notification.title}</p>
-                <p className="text-sm text-black/70">{notification.body}</p>
-                <p className="mt-1 text-xs text-black/45">{formatDate(notification.createdAt)}</p>
-              </div>
-            ))
-          )}
-        </div>
-      </article>
+                    <p className="font-semibold tracking-tight">{notification.title}</p>
+                    <p className="text-sm subtle-text">{notification.body}</p>
+                    <p className="mt-1 text-xs subtle-text">{formatDate(notification.createdAt)}</p>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </article>
 
-      <article className="card-panel p-5">
-        <h2 className="mb-4 font-title text-xl">Pedidos vinculados</h2>
+        <article className="card-panel p-5">
+          <div className="relative z-10">
+            <h2 className="mb-4 font-title text-2xl">Pedidos</h2>
 
-        {loading ? <p className="text-sm text-black/65">Cargando pedidos...</p> : null}
-        {message ? <p className="text-sm text-rose-700">{message}</p> : null}
+            {loading ? <p className="text-sm subtle-text">Cargando...</p> : null}
+            {message ? <p className="text-sm text-rose-700">{message}</p> : null}
 
-        <div className="grid gap-3">
-          {orders.length === 0 ? (
-            <p className="text-sm text-black/60">Escanea el QR del local para vincular un pedido.</p>
-          ) : (
-            orders.map((order) => (
-              <div
-                key={order.id}
-                className="rounded-2xl border border-black/10 bg-white/85 p-4 md:flex md:items-center md:justify-between"
-              >
-                <div>
-                  <p className="font-semibold tracking-tight">Pedido {order.orderNumber}</p>
-                  <p className="text-sm text-black/65">Local: {order.store.name}</p>
-                  <p className="text-xs text-black/45">Creado: {formatDate(order.createdAt)}</p>
-                  {order.readyAt ? (
-                    <p className="text-xs text-black/45">Listo: {formatDate(order.readyAt)}</p>
-                  ) : null}
-                </div>
+            <div className="grid gap-3">
+              {orders.length === 0 ? (
+                <p className="text-sm subtle-text">Sin pedidos vinculados.</p>
+              ) : (
+                orders.map((order) => (
+                  <div
+                    key={order.id}
+                    className="rounded-2xl border border-[var(--line)] bg-white/80 p-4 md:flex md:items-center md:justify-between"
+                  >
+                    <div>
+                      <p className="font-title text-2xl leading-none">#{order.orderNumber}</p>
+                      <p className="mt-1 text-sm subtle-text">{order.store.name}</p>
+                      {order.readyAt ? (
+                        <p className="mt-1 text-xs subtle-text">Ready: {formatDate(order.readyAt)}</p>
+                      ) : (
+                        <p className="mt-1 text-xs subtle-text">Creado: {formatDate(order.createdAt)}</p>
+                      )}
+                    </div>
 
-                <div className="mt-3 md:mt-0">
-                  <span className={`status-pill ${orderStatusClass(order.status)}`}>{order.status}</span>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </article>
+                    <div className="mt-3 md:mt-0">
+                      <span className={`status-pill ${orderStatusClass(order.status)}`}>{order.status}</span>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <PushPermissionButton />
     </section>
   );
 }

@@ -58,13 +58,13 @@ export function RegisterForm() {
   }
 
   return (
-    <section className="mx-auto w-full max-w-md card-panel p-6 md:p-8">
-      <h1 className="font-title text-3xl tracking-tight">Crear cuenta</h1>
-      <p className="mt-2 text-sm text-black/65">
-        Registrate para vincular pedidos por QR y recibir avisos de retiro.
-      </p>
+    <section className="mx-auto w-full max-w-md card-panel reveal p-6 md:p-8">
+      <div className="relative z-10">
+        <span className="chip-sun">New account</span>
+        <h1 className="mt-3 font-title text-3xl tracking-tight">Crear cuenta</h1>
+      </div>
 
-      <form className="mt-6 space-y-3" onSubmit={handleSubmit}>
+      <form className="relative z-10 mt-6 space-y-3" onSubmit={handleSubmit}>
         <input
           className="input-field"
           placeholder="Nombre"

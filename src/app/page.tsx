@@ -2,41 +2,80 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <section className="grid gap-6 py-10 md:grid-cols-[1.15fr_0.85fr] md:gap-8 md:py-16">
-      <article className="rounded-[2.2rem] border border-black/5 bg-white/85 p-7 shadow-[0_30px_80px_-35px_rgba(35,28,26,0.35)] backdrop-blur md:p-10">
-        <p className="mb-3 inline-flex rounded-full bg-[var(--brand-soft)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--brand)]">
-          Restaurant Pager
-        </p>
-        <h1 className="font-title text-balance text-4xl leading-[1.05] tracking-tight md:text-6xl">
-          QR por pedido y aviso instantaneo cuando esta listo.
-        </h1>
-        <p className="mt-6 max-w-2xl text-pretty text-base leading-7 text-black/70 md:text-lg">
-          El local crea el pedido, genera un QR unico y el cliente lo reclama en segundos.
-          Cuando el pedido pasa a READY, el usuario recibe aviso en la web y push en su
-          navegador.
-        </p>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Link className="btn-primary" href="/register">
-            Crear cuenta
-          </Link>
-          <Link className="btn-secondary" href="/login">
-            Ya tengo usuario
-          </Link>
+    <section className="grid gap-6 py-8 lg:grid-cols-[1.2fr_0.8fr] lg:gap-8 lg:py-14">
+      <article className="card-panel reveal p-7 md:p-10">
+        <div className="relative z-10">
+          <span className="chip-brand">Vipers pager</span>
+          <h1 className="mt-4 max-w-3xl font-title text-balance text-4xl leading-[0.98] tracking-tight md:text-6xl">
+            Pedidos con QR.
+            <br />
+            Aviso en tiempo real.
+          </h1>
+          <p className="mt-5 max-w-xl text-base subtle-text md:text-lg">
+            Escaneo rapido, claim automatico y estado listo al instante.
+          </p>
+
+          <div className="mt-7 flex flex-wrap gap-3">
+            <Link className="btn-primary" href="/login">
+              Entrar
+            </Link>
+            <Link className="btn-secondary" href="/register">
+              Crear cuenta
+            </Link>
+          </div>
+
+          <div className="mt-8 grid gap-3 sm:grid-cols-3">
+            <div className="metric-card">
+              <p className="metric-value">1s</p>
+              <p className="metric-label">claim qr</p>
+            </div>
+            <div className="metric-card">
+              <p className="metric-value">push</p>
+              <p className="metric-label">+ in-app</p>
+            </div>
+            <div className="metric-card">
+              <p className="metric-value">24/7</p>
+              <p className="metric-label">estado live</p>
+            </div>
+          </div>
         </div>
       </article>
 
-      <aside className="grid gap-4">
-        <div className="feature-card">
-          <h2 className="feature-title">Flujo simple</h2>
-          <p className="feature-text">Admin crea pedido, cliente escanea QR, pedido queda vinculado.</p>
+      <aside className="grid gap-4 reveal">
+        <div className="card-panel p-5">
+          <div className="relative z-10">
+            <div className="mb-4 flex items-center justify-between">
+              <p className="font-title text-xl">Live board</p>
+              <span className="chip-mint">online</span>
+            </div>
+
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between rounded-xl border border-[var(--line)] bg-white/70 px-3 py-2">
+                <span className="font-semibold">#182</span>
+                <span className="status-pill bg-amber-100 text-amber-700">CREATED</span>
+              </div>
+              <div className="flex items-center justify-between rounded-xl border border-[var(--line)] bg-white/70 px-3 py-2">
+                <span className="font-semibold">#183</span>
+                <span className="status-pill bg-sky-100 text-sky-700">CLAIMED</span>
+              </div>
+              <div className="flex items-center justify-between rounded-xl border border-[var(--line)] bg-white/70 px-3 py-2">
+                <span className="font-semibold">#184</span>
+                <span className="status-pill bg-[var(--mint-soft)] text-[var(--mint)]">READY</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="feature-card">
-          <h2 className="feature-title">Notificacion fuerte</h2>
-          <p className="feature-text">Push web + alerta persistente en base de datos + vista en pantalla.</p>
-        </div>
-        <div className="feature-card">
-          <h2 className="feature-title">Multi login</h2>
-          <p className="feature-text">Email/password y OAuth con Google, Facebook y GitHub opcional.</p>
+
+        <div className="card-panel p-5">
+          <div className="relative z-10">
+            <p className="font-title text-xl">Todo en una vista</p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <span className="chip-brand">QR token</span>
+              <span className="chip-sun">roles</span>
+              <span className="chip-mint">push web</span>
+              <span className="chip-brand">historial</span>
+            </div>
+          </div>
         </div>
       </aside>
     </section>

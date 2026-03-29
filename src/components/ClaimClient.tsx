@@ -57,17 +57,13 @@ export function ClaimClient({ token }: ClaimClientProps) {
   }, [session, status, token]);
 
   return (
-    <section className="mx-auto w-full max-w-xl card-panel p-7 md:p-10">
-      <p className="mb-3 inline-flex rounded-full bg-[var(--brand-soft)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.15em] text-[var(--brand)]">
-        Claim por QR
-      </p>
-      <h1 className="font-title text-3xl tracking-tight">Seguimiento de pedido</h1>
-      <p className="mt-4 text-base leading-7 text-black/75">{message}</p>
-      {error ? (
-        <p className="mt-3 text-sm font-medium text-red-700">
-          Si el problema persiste, pedi al local que regenere el QR del pedido.
-        </p>
-      ) : null}
+    <section className="mx-auto w-full max-w-xl card-panel reveal p-7 md:p-10">
+      <div className="relative z-10">
+        <span className="chip-brand">QR claim</span>
+        <h1 className="mt-3 font-title text-3xl tracking-tight">Vincular pedido</h1>
+        <p className="mt-4 text-base subtle-text">{message}</p>
+        {error ? <p className="mt-3 text-sm font-medium text-red-700">Proba con un QR nuevo.</p> : null}
+      </div>
     </section>
   );
 }

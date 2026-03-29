@@ -1,33 +1,55 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #fff9ef;
-  --ink: #1f2d2d;
-  --brand: #ff6b35;
-  --brand-soft: #ffe2d3;
-  --mint: #1f9d85;
-  --mint-soft: #d7f2ec;
+  --bg: #f2f6ff;
+  --ink: #0d1528;
+  --muted: #64708a;
+  --surface: #ffffff;
+  --line: rgba(13, 21, 40, 0.1);
+  --brand: #0ea5e9;
+  --brand-strong: #0284c7;
+  --brand-soft: #dff3ff;
+  --sun: #ff6b35;
+  --sun-soft: #ffe5db;
+  --mint: #0fa77f;
+  --mint-soft: #dff8f0;
 }
 
 @theme inline {
   --color-background: var(--bg);
   --color-foreground: var(--ink);
-  --font-sans: var(--font-sora);
-  --font-title: var(--font-space-grotesk);
+  --font-sans: var(--font-jakarta);
+  --font-title: var(--font-syne);
 }
 
 * {
   box-sizing: border-box;
 }
 
+*::selection {
+  background: rgba(14, 165, 233, 0.2);
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
 body {
   background: var(--bg);
   color: var(--ink);
-  font-family: var(--font-sora), "Segoe UI", sans-serif;
+  font-family: var(--font-jakarta), "Segoe UI", sans-serif;
+  overflow-x: hidden;
 }
 
 .font-title {
-  font-family: var(--font-space-grotesk), "Segoe UI", sans-serif;
+  font-family: var(--font-syne), "Segoe UI", sans-serif;
+  letter-spacing: -0.02em;
+}
+
+a,
+button {
+  transition: all 180ms ease;
 }
 
 .btn-primary {
@@ -35,16 +57,17 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  background: var(--brand);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-strong) 70%);
   color: #fff;
-  padding: 0.68rem 1.2rem;
-  font-weight: 600;
-  transition: transform 180ms ease, box-shadow 220ms ease;
+  padding: 0.7rem 1.15rem;
+  font-weight: 650;
+  box-shadow: 0 16px 30px -18px rgba(2, 132, 199, 0.8);
 }
 
 .btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 24px -14px rgba(255, 107, 53, 0.7);
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: 0 24px 35px -22px rgba(2, 132, 199, 0.75);
 }
 
 .btn-secondary {
@@ -52,61 +75,150 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.8);
   color: var(--ink);
-  padding: 0.68rem 1.2rem;
-  border: 1px solid rgba(31, 45, 45, 0.18);
+  padding: 0.7rem 1.1rem;
+  border: 1px solid var(--line);
   font-weight: 600;
+  backdrop-filter: blur(8px);
 }
 
-.feature-card {
-  border-radius: 1.55rem;
-  border: 1px solid rgba(32, 45, 45, 0.08);
-  background: #fff;
-  padding: 1.25rem;
-  box-shadow: 0 12px 35px -24px rgba(13, 18, 17, 0.35);
+.btn-secondary:hover {
+  background: #ffffff;
+  border-color: rgba(13, 21, 40, 0.22);
 }
 
-.feature-title {
-  font-family: var(--font-space-grotesk), "Segoe UI", sans-serif;
-  font-size: 1.1rem;
-  font-weight: 650;
-  letter-spacing: -0.02em;
+.nav-pill {
+  border-radius: 999px;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid transparent;
+  color: rgba(13, 21, 40, 0.78);
+  font-weight: 550;
 }
 
-.feature-text {
-  margin-top: 0.45rem;
-  color: rgba(20, 34, 34, 0.72);
-  line-height: 1.55;
+.nav-pill:hover {
+  border-color: var(--line);
+  background: rgba(255, 255, 255, 0.7);
 }
 
 .card-panel {
+  position: relative;
   border-radius: 1.6rem;
-  border: 1px solid rgba(31, 45, 45, 0.08);
-  background: rgba(255, 255, 255, 0.88);
-  box-shadow: 0 24px 60px -38px rgba(31, 45, 45, 0.5);
-  padding: 1.2rem;
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.76));
+  box-shadow: 0 28px 70px -42px rgba(8, 17, 40, 0.38);
+  overflow: hidden;
+}
+
+.card-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(120deg, rgba(14, 165, 233, 0.07), transparent 34%, rgba(255, 107, 53, 0.07));
 }
 
 .input-field {
   width: 100%;
   border-radius: 0.95rem;
-  border: 1px solid rgba(31, 45, 45, 0.2);
-  background: white;
-  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.82);
+  padding: 0.76rem 0.9rem;
+  color: var(--ink);
   outline: none;
 }
 
+.input-field::placeholder {
+  color: rgba(100, 112, 138, 0.8);
+}
+
 .input-field:focus {
-  border-color: rgba(255, 107, 53, 0.7);
-  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
+  border-color: rgba(14, 165, 233, 0.72);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
 }
 
 .status-pill {
   border-radius: 999px;
-  padding: 0.2rem 0.6rem;
-  font-size: 0.72rem;
+  padding: 0.22rem 0.62rem;
+  font-size: 0.68rem;
   font-weight: 650;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
+}
+
+.metric-card {
+  border-radius: 1rem;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.72);
+  padding: 0.9rem;
+}
+
+.metric-value {
+  font-family: var(--font-syne), "Segoe UI", sans-serif;
+  font-size: 1.55rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.metric-label {
+  margin-top: 0.32rem;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  color: var(--muted);
+}
+
+.subtle-text {
+  color: var(--muted);
+}
+
+.chip-brand {
+  border-radius: 999px;
+  border: 1px solid rgba(14, 165, 233, 0.2);
+  background: var(--brand-soft);
+  color: var(--brand-strong);
+  padding: 0.25rem 0.6rem;
+  font-size: 0.68rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.chip-sun {
+  border-radius: 999px;
+  border: 1px solid rgba(255, 107, 53, 0.22);
+  background: var(--sun-soft);
+  color: var(--sun);
+  padding: 0.25rem 0.6rem;
+  font-size: 0.68rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.chip-mint {
+  border-radius: 999px;
+  border: 1px solid rgba(15, 167, 127, 0.2);
+  background: var(--mint-soft);
+  color: var(--mint);
+  padding: 0.25rem 0.6rem;
+  font-size: 0.68rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal {
+  animation: rise 320ms ease both;
 }
