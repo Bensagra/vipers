@@ -1,26 +1,112 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #fff9ef;
+  --ink: #1f2d2d;
+  --brand: #ff6b35;
+  --brand-soft: #ffe2d3;
+  --mint: #1f9d85;
+  --mint-soft: #d7f2ec;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--bg);
+  --color-foreground: var(--ink);
+  --font-sans: var(--font-sora);
+  --font-title: var(--font-space-grotesk);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sora), "Segoe UI", sans-serif;
+}
+
+.font-title {
+  font-family: var(--font-space-grotesk), "Segoe UI", sans-serif;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--brand);
+  color: #fff;
+  padding: 0.68rem 1.2rem;
+  font-weight: 600;
+  transition: transform 180ms ease, box-shadow 220ms ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px -14px rgba(255, 107, 53, 0.7);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  padding: 0.68rem 1.2rem;
+  border: 1px solid rgba(31, 45, 45, 0.18);
+  font-weight: 600;
+}
+
+.feature-card {
+  border-radius: 1.55rem;
+  border: 1px solid rgba(32, 45, 45, 0.08);
+  background: #fff;
+  padding: 1.25rem;
+  box-shadow: 0 12px 35px -24px rgba(13, 18, 17, 0.35);
+}
+
+.feature-title {
+  font-family: var(--font-space-grotesk), "Segoe UI", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.feature-text {
+  margin-top: 0.45rem;
+  color: rgba(20, 34, 34, 0.72);
+  line-height: 1.55;
+}
+
+.card-panel {
+  border-radius: 1.6rem;
+  border: 1px solid rgba(31, 45, 45, 0.08);
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 24px 60px -38px rgba(31, 45, 45, 0.5);
+  padding: 1.2rem;
+}
+
+.input-field {
+  width: 100%;
+  border-radius: 0.95rem;
+  border: 1px solid rgba(31, 45, 45, 0.2);
+  background: white;
+  padding: 0.7rem 0.85rem;
+  outline: none;
+}
+
+.input-field:focus {
+  border-color: rgba(255, 107, 53, 0.7);
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
+}
+
+.status-pill {
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
