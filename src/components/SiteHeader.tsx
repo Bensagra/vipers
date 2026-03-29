@@ -7,6 +7,13 @@ import { signOut, useSession } from "next-auth/react";
 export function SiteHeader() {
   const { data: session, status } = useSession();
 
+  function roleLabel(role: string) {
+    if (role === "SUPERADMIN") return "Superadmin";
+    if (role === "ADMIN") return "Administrador";
+    if (role === "CUSTOMER") return "Cliente";
+    return role;
+  }
+
   return (
     <header className="sticky top-3 z-30 px-4 md:px-8">
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-3 rounded-2xl border border-[var(--line)] bg-white/75 px-3 py-2 backdrop-blur-xl shadow-[0_18px_35px_-28px_rgba(8,17,40,0.65)]">
@@ -24,13 +31,13 @@ export function SiteHeader() {
 
           {session?.user.role === "SUPERADMIN" && (
             <Link className="nav-pill" href="/superadmin">
-              Superadmin
+              Control
             </Link>
           )}
 
           {(session?.user.role === "ADMIN" || session?.user.role === "SUPERADMIN") && (
             <Link className="nav-pill" href="/admin">
-              Admin
+              Gestion
             </Link>
           )}
 
@@ -48,7 +55,7 @@ export function SiteHeader() {
                     : "bg-[var(--mint-soft)] text-[var(--mint)]",
                 )}
               >
-                {session.user.role}
+                {roleLabel(session.user.role)}
               </span>
 
               <button

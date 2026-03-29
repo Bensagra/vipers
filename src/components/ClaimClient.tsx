@@ -59,7 +59,7 @@ export function ClaimClient({ token }: ClaimClientProps) {
   return (
     <section className="mx-auto w-full max-w-xl card-panel reveal p-7 md:p-10">
       <div className="relative z-10">
-        <span className="chip-brand">QR claim</span>
+        <span className="chip-brand">Escaneo QR</span>
         <h1 className="mt-3 font-title text-3xl tracking-tight">Vincular pedido</h1>
         <p className="mt-4 text-base subtle-text">{message}</p>
         {error ? <p className="mt-3 text-sm font-medium text-red-700">Proba con un QR nuevo.</p> : null}

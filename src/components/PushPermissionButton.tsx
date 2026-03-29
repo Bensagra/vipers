@@ -133,7 +133,7 @@ export function PushPermissionButton() {
     <div className="card-panel p-4">
       <div className="relative z-10 space-y-3">
         <div className="flex items-center justify-between gap-2">
-          <h3 className="font-title text-lg">Push web</h3>
+          <h3 className="font-title text-lg">Notificaciones push</h3>
           <span className="chip-mint">opcional</span>
         </div>
 

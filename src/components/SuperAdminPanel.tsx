@@ -15,6 +15,13 @@ type StoreSummary = {
   createdAt: string;
 };
 
+function roleLabel(role?: string | null) {
+  if (role === "SUPERADMIN") return "Superadmin";
+  if (role === "ADMIN") return "Administrador";
+  if (role === "CUSTOMER") return "Cliente";
+  return role ?? "Sin rol";
+}
+
 export function SuperAdminPanel() {
   const [stores, setStores] = useState<StoreSummary[]>([]);
   const [storeName, setStoreName] = useState("");
@@ -91,8 +98,8 @@ export function SuperAdminPanel() {
       <header className="card-panel reveal p-6">
         <div className="relative z-10 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <span className="chip-sun">Control center</span>
-            <h1 className="mt-3 font-title text-3xl tracking-tight md:text-4xl">Panel Superadmin</h1>
+            <span className="chip-sun">Control general</span>
+            <h1 className="mt-3 font-title text-3xl tracking-tight md:text-4xl">Panel superadmin</h1>
           </div>
 
           <div className="grid grid-cols-2 gap-2">
@@ -110,7 +117,7 @@ export function SuperAdminPanel() {
 
       <article className="card-panel p-5">
         <div className="relative z-10">
-          <h2 className="font-title text-2xl">Alta de local</h2>
+          <h2 className="font-title text-2xl">Crear local</h2>
 
           <form className="mt-4 grid gap-3 md:grid-cols-2" onSubmit={handleCreateStore}>
             <input
@@ -137,7 +144,7 @@ export function SuperAdminPanel() {
             <input
               type="email"
               className="input-field"
-              placeholder="Email cuenta"
+              placeholder="Correo de la cuenta"
               value={managerEmail}
               onChange={(event) => setManagerEmail(event.target.value)}
               required
@@ -146,7 +153,7 @@ export function SuperAdminPanel() {
             <input
               type="password"
               className="input-field md:col-span-2"
-              placeholder="Password inicial"
+              placeholder="Contrasena inicial"
               minLength={8}
               value={managerPassword}
               onChange={(event) => setManagerPassword(event.target.value)}
@@ -189,7 +196,7 @@ export function SuperAdminPanel() {
                   </div>
 
                   <span className="status-pill bg-[var(--brand-soft)] text-[var(--brand-strong)]">
-                    {store.managerUser?.role ?? "N/A"}
+                    {roleLabel(store.managerUser?.role)}
                   </span>
                 </div>
               ))

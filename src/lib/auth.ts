@@ -34,10 +34,10 @@ export function isSuperAdminEmail(email?: string | null) {
 
 const providers: NextAuthOptions["providers"] = [
   CredentialsProvider({
-    name: "Email y password",
+    name: "Correo y contrasena",
     credentials: {
-      email: { label: "Email", type: "email" },
-      password: { label: "Password", type: "password" },
+      email: { label: "Correo", type: "email" },
+      password: { label: "Contrasena", type: "password" },
     },
     async authorize(credentials) {
       const email = credentials?.email;

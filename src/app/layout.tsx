@@ -17,8 +17,8 @@ const syne = Syne({
 });
 
 export const metadata: Metadata = {
-  title: "Vipers | Restaurant Pager",
-  description: "Pedidos por QR con notificaciones push y panel admin.",
+  title: "Vipers | Turnos por QR",
+  description: "Pedidos por QR con notificaciones push y panel de locales.",
 };
 
 export default function RootLayout({
@@ -30,8 +30,8 @@ export default function RootLayout({
     <html lang="es" className={`${jakarta.variable} ${syne.variable} h-full antialiased`}>
       <body className="min-h-full text-[var(--ink)]">
         <AuthSessionProvider>
-          <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_18%_14%,rgba(14,165,233,0.23),transparent_34%),radial-gradient(circle_at_84%_8%,rgba(255,107,53,0.2),transparent_26%),linear-gradient(150deg,#f4f8ff_0%,#eef4ff_42%,#fdf7f3_100%)]" />
-          <div className="pointer-events-none fixed inset-0 -z-10 opacity-55 [background-image:linear-gradient(to_right,rgba(13,21,40,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(13,21,40,0.035)_1px,transparent_1px)] [background-size:42px_42px]" />
+          <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_14%_9%,rgba(43,108,246,0.18),transparent_34%),radial-gradient(circle_at_82%_12%,rgba(229,107,45,0.14),transparent_30%),linear-gradient(155deg,#f7f9fe_0%,#f4f7ff_44%,#fcf8f6_100%)]" />
+          <div className="pointer-events-none fixed inset-0 -z-10 opacity-50 [background-image:linear-gradient(to_right,rgba(16,24,40,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(16,24,40,0.03)_1px,transparent_1px)] [background-size:46px_46px]" />
           <SiteHeader />
           <main className="mx-auto w-full max-w-7xl px-4 pb-16 pt-10 md:px-8">{children}</main>
         </AuthSessionProvider>

@@ -54,7 +54,7 @@ export function LoginForm({ providers }: LoginFormProps) {
   return (
     <section className="mx-auto w-full max-w-md card-panel reveal p-6 md:p-8">
       <div className="relative z-10">
-        <span className="chip-brand">Access</span>
+        <span className="chip-brand">Acceso</span>
         <h1 className="mt-3 font-title text-3xl tracking-tight">Entrar</h1>
       </div>
 
@@ -62,7 +62,7 @@ export function LoginForm({ providers }: LoginFormProps) {
         <input
           type="email"
           className="input-field"
-          placeholder="Email"
+          placeholder="Correo"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           required
@@ -71,7 +71,7 @@ export function LoginForm({ providers }: LoginFormProps) {
         <input
           type="password"
           className="input-field"
-          placeholder="Password"
+          placeholder="Contrasena"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           required
@@ -86,7 +86,7 @@ export function LoginForm({ providers }: LoginFormProps) {
 
       {providers.length > 0 ? (
         <div className="relative z-10 mt-6 space-y-2">
-          <p className="text-xs uppercase tracking-[0.16em] subtle-text">OAuth</p>
+          <p className="text-xs uppercase tracking-[0.16em] subtle-text">Acceso social</p>
 
           <div className="grid gap-2">
             {providers.map((provider) => (

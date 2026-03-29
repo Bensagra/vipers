@@ -19,7 +19,7 @@ export function RegisterForm() {
     setError("");
 
     if (password !== confirmPassword) {
-      setError("Las passwords no coinciden");
+      setError("Las contrasenas no coinciden");
       return;
     }
 
@@ -60,7 +60,7 @@ export function RegisterForm() {
   return (
     <section className="mx-auto w-full max-w-md card-panel reveal p-6 md:p-8">
       <div className="relative z-10">
-        <span className="chip-sun">New account</span>
+        <span className="chip-sun">Registro</span>
         <h1 className="mt-3 font-title text-3xl tracking-tight">Crear cuenta</h1>
       </div>
 
@@ -75,7 +75,7 @@ export function RegisterForm() {
         <input
           type="email"
           className="input-field"
-          placeholder="Email"
+          placeholder="Correo"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           required
@@ -83,7 +83,7 @@ export function RegisterForm() {
         <input
           type="password"
           className="input-field"
-          placeholder="Password (minimo 8 caracteres)"
+          placeholder="Contrasena (minimo 8 caracteres)"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           minLength={8}
@@ -92,7 +92,7 @@ export function RegisterForm() {
         <input
           type="password"
           className="input-field"
-          placeholder="Repetir password"
+          placeholder="Repetir contrasena"
           value={confirmPassword}
           onChange={(event) => setConfirmPassword(event.target.value)}
           minLength={8}

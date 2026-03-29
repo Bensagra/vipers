@@ -15,7 +15,7 @@ export async function POST(
     !session?.user?.id ||
     (session.user.role !== UserRole.ADMIN && session.user.role !== UserRole.SUPERADMIN)
   ) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
   const { id } = await params;

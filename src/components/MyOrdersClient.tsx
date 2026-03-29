@@ -38,6 +38,25 @@ function orderStatusClass(status: string) {
   }
 }
 
+function orderStatusLabel(status: string) {
+  switch (status) {
+    case "READY":
+      return "Listo";
+    case "CLAIMED":
+      return "Asignado";
+    case "CREATED":
+      return "Creado";
+    case "PREPARING":
+      return "Preparando";
+    case "DELIVERED":
+      return "Entregado";
+    case "CANCELLED":
+      return "Cancelado";
+    default:
+      return status;
+  }
+}
+
 function notificationStatusClass(status: string) {
   if (status === "SENT") {
     return "bg-[var(--mint-soft)] text-[var(--mint)]";
@@ -48,6 +67,30 @@ function notificationStatusClass(status: string) {
   }
 
   return "bg-amber-100 text-amber-700";
+}
+
+function notificationStatusLabel(status: string) {
+  switch (status) {
+    case "SENT":
+      return "Enviada";
+    case "FAILED":
+      return "Fallida";
+    case "PENDING":
+      return "Pendiente";
+    default:
+      return status;
+  }
+}
+
+function notificationChannelLabel(channel: string) {
+  switch (channel) {
+    case "IN_APP":
+      return "En app";
+    case "PUSH":
+      return "Push";
+    default:
+      return channel;
+  }
 }
 
 function formatDate(value: string) {
@@ -146,7 +189,7 @@ export function MyOrdersClient() {
       <header className="card-panel reveal p-6">
         <div className="relative z-10 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <span className="chip-mint">Client</span>
+            <span className="chip-mint">Cliente</span>
             <h1 className="mt-3 font-title text-3xl tracking-tight md:text-4xl">Mis pedidos</h1>
           </div>
 
@@ -157,7 +200,7 @@ export function MyOrdersClient() {
             </div>
             <div className="metric-card min-w-[100px]">
               <p className="metric-value">{readyCount}</p>
-              <p className="metric-label">ready</p>
+              <p className="metric-label">listos</p>
             </div>
             <div className="metric-card min-w-[100px]">
               <p className="metric-value">{unreadCount}</p>
@@ -187,12 +230,14 @@ export function MyOrdersClient() {
                     className="rounded-2xl border border-[var(--line)] bg-white/80 p-4"
                   >
                     <div className="mb-2 flex flex-wrap items-center gap-2">
-                      <span className="status-pill bg-black/10 text-black/70">{notification.channel}</span>
+                      <span className="status-pill bg-black/10 text-black/70">
+                        {notificationChannelLabel(notification.channel)}
+                      </span>
                       <span className={`status-pill ${notificationStatusClass(notification.deliveryStatus)}`}>
-                        {notification.deliveryStatus}
+                        {notificationStatusLabel(notification.deliveryStatus)}
                       </span>
                       {!notification.readAt ? (
-                        <span className="status-pill bg-[var(--sun-soft)] text-[var(--sun)]">NEW</span>
+                        <span className="status-pill bg-[var(--sun-soft)] text-[var(--sun)]">Nueva</span>
                       ) : null}
                     </div>
 
@@ -226,14 +271,16 @@ export function MyOrdersClient() {
                       <p className="font-title text-2xl leading-none">#{order.orderNumber}</p>
                       <p className="mt-1 text-sm subtle-text">{order.store.name}</p>
                       {order.readyAt ? (
-                        <p className="mt-1 text-xs subtle-text">Ready: {formatDate(order.readyAt)}</p>
+                        <p className="mt-1 text-xs subtle-text">Listo: {formatDate(order.readyAt)}</p>
                       ) : (
                         <p className="mt-1 text-xs subtle-text">Creado: {formatDate(order.createdAt)}</p>
                       )}
                     </div>
 
                     <div className="mt-3 md:mt-0">
-                      <span className={`status-pill ${orderStatusClass(order.status)}`}>{order.status}</span>
+                      <span className={`status-pill ${orderStatusClass(order.status)}`}>
+                        {orderStatusLabel(order.status)}
+                      </span>
                     </div>
                   </div>
                 ))

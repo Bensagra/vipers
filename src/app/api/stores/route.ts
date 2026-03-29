@@ -27,11 +27,11 @@ const createStoreSchema = z.object({
 export async function GET() {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
   if (session.user.role !== UserRole.ADMIN && session.user.role !== UserRole.SUPERADMIN) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    return NextResponse.json({ error: "Prohibido" }, { status: 403 });
   }
 
   const stores = await db.store.findMany({
@@ -62,7 +62,7 @@ export async function GET() {
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id || session.user.role !== UserRole.SUPERADMIN) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
   try {
@@ -176,7 +176,7 @@ export async function POST(req: Request) {
     }
 
     if (message.includes("Unique constraint")) {
-      return NextResponse.json({ error: "El local o email ya existen" }, { status: 409 });
+      return NextResponse.json({ error: "El local o correo ya existen" }, { status: 409 });
     }
 
     return NextResponse.json({ error: "No se pudo crear el local" }, { status: 500 });

@@ -28,7 +28,7 @@ export async function POST(req: Request) {
 
     const existing = await db.user.findUnique({ where: { email } });
     if (existing) {
-      return NextResponse.json({ error: "Ese email ya existe" }, { status: 409 });
+      return NextResponse.json({ error: "Ese correo ya existe" }, { status: 409 });
     }
 
     const passwordHash = await hash(password, 12);

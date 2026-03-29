@@ -32,6 +32,25 @@ function statusClass(status: string) {
   }
 }
 
+function statusLabel(status: string) {
+  switch (status) {
+    case "READY":
+      return "Listo";
+    case "CLAIMED":
+      return "Asignado";
+    case "CREATED":
+      return "Creado";
+    case "PREPARING":
+      return "Preparando";
+    case "DELIVERED":
+      return "Entregado";
+    case "CANCELLED":
+      return "Cancelado";
+    default:
+      return status;
+  }
+}
+
 export function AdminPanel() {
   const [stores, setStores] = useState<Store[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
@@ -147,11 +166,11 @@ export function AdminPanel() {
     const data = (await response.json()) as { error?: string };
 
     if (!response.ok) {
-      setMessage(data.error || "No se pudo marcar READY");
+      setMessage(data.error || "No se pudo marcar como listo");
       return;
     }
 
-    setMessage("Pedido en READY");
+    setMessage("Pedido marcado como listo");
     if (selectedStoreId) {
       await fetchOrders(selectedStoreId);
     }
@@ -162,8 +181,8 @@ export function AdminPanel() {
       <header className="card-panel reveal p-6">
         <div className="relative z-10 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <span className="chip-brand">Store desk</span>
-            <h1 className="mt-3 font-title text-3xl tracking-tight md:text-4xl">Panel Admin</h1>
+            <span className="chip-brand">Operacion local</span>
+            <h1 className="mt-3 font-title text-3xl tracking-tight md:text-4xl">Panel del local</h1>
           </div>
 
           <div className="grid grid-cols-2 gap-2">
@@ -173,7 +192,7 @@ export function AdminPanel() {
             </div>
             <div className="metric-card min-w-[112px]">
               <p className="metric-value">{readyCount}</p>
-              <p className="metric-label">ready</p>
+              <p className="metric-label">listos</p>
             </div>
           </div>
         </div>
@@ -203,7 +222,7 @@ export function AdminPanel() {
             <form className="space-y-3" onSubmit={handleCreateOrder}>
               <input
                 className="input-field"
-                placeholder="Numero"
+                placeholder="Numero de pedido"
                 value={orderNumber}
                 onChange={(event) => setOrderNumber(event.target.value)}
               />
@@ -228,7 +247,7 @@ export function AdminPanel() {
         <article className="card-panel p-5">
           <div className="relative z-10">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-              <h2 className="font-title text-2xl">Pedidos</h2>
+              <h2 className="font-title text-2xl">Pedidos recientes</h2>
               <button
                 className="btn-secondary"
                 type="button"
@@ -255,14 +274,16 @@ export function AdminPanel() {
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <span className={`status-pill ${statusClass(order.status)}`}>{order.status}</span>
+                      <span className={`status-pill ${statusClass(order.status)}`}>
+                        {statusLabel(order.status)}
+                      </span>
                       <button
                         type="button"
                         className="btn-primary"
                         disabled={order.status === "READY"}
                         onClick={() => void markAsReady(order.id)}
                       >
-                        READY
+                        Marcar listo
                       </button>
                     </div>
                   </div>

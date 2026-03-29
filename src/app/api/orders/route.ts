@@ -19,7 +19,7 @@ export async function GET(req: Request) {
     !session?.user?.id ||
     (session.user.role !== UserRole.ADMIN && session.user.role !== UserRole.SUPERADMIN)
   ) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
   const url = new URL(req.url);
@@ -74,7 +74,7 @@ export async function POST(req: Request) {
     !session?.user?.id ||
     (session.user.role !== UserRole.ADMIN && session.user.role !== UserRole.SUPERADMIN)
   ) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
   try {
@@ -110,7 +110,7 @@ export async function POST(req: Request) {
     }
 
     if (!effectiveStoreId) {
-      return NextResponse.json({ error: "Falta storeId" }, { status: 400 });
+      return NextResponse.json({ error: "Falta el local" }, { status: 400 });
     }
 
     const store = await db.store.findUnique({ where: { id: effectiveStoreId } });

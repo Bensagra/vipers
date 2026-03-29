@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #f2f6ff;
-  --ink: #0d1528;
-  --muted: #64708a;
+  --bg: #f5f7fb;
+  --ink: #101828;
+  --muted: #667085;
   --surface: #ffffff;
-  --line: rgba(13, 21, 40, 0.1);
-  --brand: #0ea5e9;
-  --brand-strong: #0284c7;
-  --brand-soft: #dff3ff;
-  --sun: #ff6b35;
-  --sun-soft: #ffe5db;
-  --mint: #0fa77f;
-  --mint-soft: #dff8f0;
+  --line: rgba(16, 24, 40, 0.1);
+  --brand: #2b6cf6;
+  --brand-strong: #1e50c8;
+  --brand-soft: #e8efff;
+  --sun: #e56b2d;
+  --sun-soft: #ffe9dd;
+  --mint: #119777;
+  --mint-soft: #def5ee;
 }
 
 @theme inline {
@@ -27,7 +27,7 @@
 }
 
 *::selection {
-  background: rgba(14, 165, 233, 0.2);
+  background: rgba(43, 108, 246, 0.2);
 }
 
 html,
@@ -57,17 +57,18 @@ button {
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.28);
   background: linear-gradient(135deg, var(--brand) 0%, var(--brand-strong) 70%);
   color: #fff;
   padding: 0.7rem 1.15rem;
   font-weight: 650;
-  box-shadow: 0 16px 30px -18px rgba(2, 132, 199, 0.8);
+  letter-spacing: 0.01em;
+  box-shadow: 0 16px 28px -16px rgba(30, 80, 200, 0.7);
 }
 
 .btn-primary:hover {
-  transform: translateY(-1px) scale(1.01);
-  box-shadow: 0 24px 35px -22px rgba(2, 132, 199, 0.75);
+  transform: translateY(-1px);
+  box-shadow: 0 22px 34px -22px rgba(30, 80, 200, 0.72);
 }
 
 .btn-secondary {
@@ -75,7 +76,7 @@ button {
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.78);
   color: var(--ink);
   padding: 0.7rem 1.1rem;
   border: 1px solid var(--line);
@@ -103,10 +104,10 @@ button {
 
 .card-panel {
   position: relative;
-  border-radius: 1.6rem;
+  border-radius: 1.4rem;
   border: 1px solid var(--line);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.76));
-  box-shadow: 0 28px 70px -42px rgba(8, 17, 40, 0.38);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8));
+  box-shadow: 0 24px 56px -38px rgba(9, 18, 41, 0.42);
   overflow: hidden;
 }
 
@@ -115,7 +116,7 @@ button {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(120deg, rgba(14, 165, 233, 0.07), transparent 34%, rgba(255, 107, 53, 0.07));
+  background: linear-gradient(120deg, rgba(43, 108, 246, 0.05), transparent 36%, rgba(229, 107, 45, 0.05));
 }
 
 .input-field {
@@ -133,8 +134,8 @@ button {
 }
 
 .input-field:focus {
-  border-color: rgba(14, 165, 233, 0.72);
-  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+  border-color: rgba(43, 108, 246, 0.7);
+  box-shadow: 0 0 0 3px rgba(43, 108, 246, 0.12);
 }
 
 .status-pill {
@@ -149,7 +150,7 @@ button {
 .metric-card {
   border-radius: 1rem;
   border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.74);
   padding: 0.9rem;
 }
 
